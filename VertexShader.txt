@@ -1,0 +1,15 @@
+#version 420 core
+
+layout(location = 0) in vec3 pos;
+layout(location = 1) in vec2 inCoord;
+
+out vec2 coord;
+uniform mat4 Ortho;
+
+void main(){
+
+	coord = inCoord;
+
+	vec4 temp = vec4(pos,1.0);
+	gl_Position = Ortho * temp;
+}
