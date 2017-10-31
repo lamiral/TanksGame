@@ -19,7 +19,7 @@ COLLISION_TYPE Collision::player_collision(Player *player, Map *map)
 		//Up collision
 		if (((pY <= (sY + sH) && (pY+pH) >= sY)) && ((pX <= (sX + sW) && (pX + pW) >= sX)))
 		{
-			if		(player->direction == UP)	return UP_COLLISION;
+			if	(player->direction == UP)		return UP_COLLISION;
 			else if (player->direction == DOWN)		return DOWN_COLLISION;
 			else if (player->direction == RIGHT)		return RIGHT_COLLISION;
 			else if (player->direction == LEFT)		return LEFT_COLLISION;
