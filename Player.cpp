@@ -1,13 +1,20 @@
 #include "Player.h"
 
-Player::Player(float _x,float _y,float _w,float _h)
+Player::Player(float _x,float _y,float _w,float _h,int _playerNumber)
 {	
 	w = _w;
 	h = _h;
 	x = _x;
 	y = _y;
 
-	direction = 1;
+	lastTime = 0.0f;
+
+	lives = 3;
+	points = 0;
+
+	playerNumber = _playerNumber;
+
+	direction = DOWN;
 
 	sprite = new Sprite(_w, _h, _x, _y, DYNAMIC);
 }
@@ -15,6 +22,11 @@ Player::Player(float _x,float _y,float _w,float _h)
 Player::~Player()
 {
 	delete sprite;
+
+	for (short i = 0; i < shells.size(); i++)
+	{
+		delete shells[i];
+	}
 }
 
 void Player::setTexture(const char *pathTexture)
@@ -28,6 +40,15 @@ void Player::draw()
 	sprite->y = this->y;
 
 	sprite->draw();
+	drawShells();
+}
+
+void Player::drawShells()
+{
+	for (short i = 0; i < shells.size(); i++)
+	{
+		if(shells[i] != nullptr) shells[i]->draw();
+	}
 }
 
 void Player::move(KEY_TYPE key)
@@ -38,7 +59,10 @@ void Player::move(KEY_TYPE key)
 		if (direction != UP)
 		{
 			this->direction = UP;
-			this->setTexture("resources/textures/up.png");
+
+			sprite->freeTexture();
+			if		(playerNumber == 1) this->setTexture("resources/textures/p1up.png");
+			else if (playerNumber == 2) this->setTexture("resources/textures/p2up.png");
 		}
 	}
 	else if (key == KEY_S)
@@ -47,7 +71,10 @@ void Player::move(KEY_TYPE key)
 		if (this->direction != DOWN)
 		{
 			this->direction = DOWN;
-			this->setTexture("resources/textures/down.png");
+
+			sprite->freeTexture();
+			if		(playerNumber == 1) this->setTexture("resources/textures/p1down.png");
+			else if (playerNumber == 2) this->setTexture("resources/textures/p2down.png");
 		}
 	}
 	else if (key == KEY_D)
@@ -56,7 +83,10 @@ void Player::move(KEY_TYPE key)
 		if (this->direction != RIGHT)
 		{
 			this->direction = RIGHT;
-			this->setTexture("resources/textures/right.png");
+
+			sprite->freeTexture();
+			if		(playerNumber == 1) this->setTexture("resources/textures/p1right.png");
+			else if (playerNumber == 2) this->setTexture("resources/textures/p2right.png");
 		}
 	}
 	else if (key == KEY_A)
@@ -65,7 +95,45 @@ void Player::move(KEY_TYPE key)
 		if (this->direction != LEFT)
 		{
 			this->direction = LEFT;
-			this->setTexture("resources/textures/left.png");
+
+			sprite->freeTexture();
+			if		(playerNumber == 1) this->setTexture("resources/textures/p1left.png");
+			else if (playerNumber == 2) this->setTexture("resources/textures/p2left.png");
 		}
+	}
+}
+
+void Player::instantiateShell(float currTime)
+{	
+	float deltaTime = currTime - lastTime;
+
+	std::cout << deltaTime << std::endl;
+
+	if (deltaTime < 1) return;
+
+	lastTime = glfwGetTime();
+
+	float shell_size = 10;
+
+	if (direction == UP)
+	{
+		Shell *shell = new Shell(x + shell_size, y, shell_size, shell_size, SHELL_UP);
+		this->shells.push_back(shell);
+	}
+	else if (direction == DOWN)
+	{
+
+		Shell *shell = new Shell(x + shell_size, y + w, shell_size, shell_size, SHELL_DOWN);
+		this->shells.push_back(shell);
+	}
+	else if (direction == RIGHT)
+	{
+		Shell *shell = new Shell(x + w, y + (h / 2), shell_size, shell_size, SHELL_RIGHT);
+		this->shells.push_back(shell);
+	}
+	else if (direction == LEFT)
+	{
+		Shell *shell = new Shell(x, y + (w / 2), shell_size, shell_size, SHELL_LEFT);
+		this->shells.push_back(shell);
 	}
 }

@@ -40,6 +40,9 @@ private:
 	void initAppObjects();
 	void initOrtho();
 	void key();
+	void collision();
+	void restartGame();
+	void checkGame();
 
 	bool initGL();
 

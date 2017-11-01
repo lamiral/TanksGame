@@ -40,6 +40,25 @@ void MapLoader::loadMap(Map *map, const char *mapPath,int mapSize,int sectionSiz
 				section->setTexture("resources/textures/grass.png");
 				map->sections.push_back(section);
 			}
+			else if (str[i] == OLD_WALL)
+			{
+				Section *section = new Section(sectionSize, sectionSize, x, y, OLD_WALL_SECTION);
+				section->setTexture("resources/textures/oldWall.png");
+				map->sections.push_back(section);
+			}
+			else if (str[i] == WINN_1)
+			{
+				Section *section = new Section(sectionSize, sectionSize, x, y, OLD_WALL_SECTION);
+				section->setTexture("resources/textures/winn1.png");
+				map->sections.push_back(section);
+			}
+			else if (str[i] == WINN_2)
+			{
+				Section *section = new Section(sectionSize, sectionSize, x, y, OLD_WALL_SECTION);
+				section->setTexture("resources/textures/winn2.png");
+				map->sections.push_back(section);
+			}
+
 			x += sectionSize;
 		}
 		m++;

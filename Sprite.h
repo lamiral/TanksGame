@@ -18,5 +18,7 @@ public:
 	~Sprite();
 
 	void draw();
+
+	void freeTexture();
 	void setTexture(const char *filepath);
 };

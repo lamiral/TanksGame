@@ -38,6 +38,7 @@ void Application::start()
 		{
 			clear();
 			key();
+			collision();
 
 			shader->use();
 			shader->SetMatrix4fv("Ortho",Ortho);
@@ -52,6 +53,24 @@ void Application::start()
 	}
 }
 
+void Application::restartGame()
+{
+
+}
+
+void Application::checkGame()
+{
+	if (player1->getLives() <= 0)
+	{
+		restartGame();
+	}
+
+	if (player2->getLives() <= 0)
+	{
+		restartGame();
+	}
+}
+
 void Application::key()
 {	
 	COLLISION_TYPE player1_collision = Collision::player_collision(player1, map);
@@ -61,12 +80,20 @@ void Application::key()
 	else if (inputManager->key_pressed(KEY_S))    {  if (player1_collision != DOWN_COLLISION && player1_collision != LEFT_COLLISION && player1_collision != RIGHT_COLLISION)		player1->move(KEY_S); }
 	else if (inputManager->key_pressed(KEY_D))    {  if (player1_collision != RIGHT_COLLISION  && player1_collision != UP_COLLISION && player1_collision != DOWN_COLLISION)			player1->move(KEY_D); }
 	else if (inputManager->key_pressed(KEY_A))    {  if (player1_collision != LEFT_COLLISION  && player1_collision != DOWN_COLLISION && player1_collision != UP_COLLISION)			player1->move(KEY_A); }
+	else if (inputManager->key_pressed(KEY_LEFT_ALT)) { player1->instantiateShell((float)glfwGetTime()); }
 
 	if		(inputManager->key_pressed(KEY_UP))   {	 if (player2_collision != UP_COLLISION && player2_collision != LEFT_COLLISION && player2_collision != RIGHT_COLLISION)			player2->move(KEY_W); }
 	else if (inputManager->key_pressed(KEY_DOWN)) {  if (player2_collision != DOWN_COLLISION && player2_collision != LEFT_COLLISION && player2_collision != RIGHT_COLLISION)		player2->move(KEY_S); }
 	else if (inputManager->key_pressed(KEY_RIGHT)){  if (player2_collision != RIGHT_COLLISION  && player2_collision != UP_COLLISION && player2_collision != DOWN_COLLISION)			player2->move(KEY_D); }
 	else if (inputManager->key_pressed(KEY_LEFT)) {  if (player2_collision != LEFT_COLLISION  && player2_collision != DOWN_COLLISION && player2_collision != UP_COLLISION)			player2->move(KEY_A); }
+	else if (inputManager->key_pressed(KEY_RIGHT_ALT)) { player2->instantiateShell((float)glfwGetTime()); }
+	
 
+}
+
+void Application::collision()
+{
+	Collision::shell_collision(player1, player2, map);
 }
 
 void Application::initAppObjects()
@@ -77,11 +104,11 @@ void Application::initAppObjects()
 	map = new Map();
 	MapLoader::loadMap(map, "resources/maps/map1.txt", MAP_SIZE, MAP_SIZE);
 
-	player1 = new Player(100, 100, MAP_SIZE+15, MAP_SIZE+15);
-	player1->setTexture("resources/textures/down.png");
+	player1 = new Player(100, 100, MAP_SIZE+15, MAP_SIZE+15,1);
+	player1->setTexture("resources/textures/p1down.png");
 
-	player2 = new Player(200, 200, MAP_SIZE+15, MAP_SIZE+15);
-	player2->setTexture("resources/textures/down.png");
+	player2 = new Player(200, 200, MAP_SIZE+15, MAP_SIZE+15,2);
+	player2->setTexture("resources/textures/p2down.png");
 
 	inputManager = new InputManager(window->getWindow());
 }

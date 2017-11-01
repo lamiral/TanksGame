@@ -17,5 +17,5 @@ class Collision
 public:
 
 	static COLLISION_TYPE player_collision(Player *player,Map *map);
-	static void shell_collision();
+	static void shell_collision(Player *player1,Player *player2,Map *map);
 };

@@ -12,8 +12,11 @@
 enum
 {	
 	WALL  = '#',
+	OLD_WALL = '|',
 	WATER = '&',
-	GRASS = '$'
+	GRASS = '$',
+	WINN_1 = '1',
+	WINN_2 = '2'
 };
 
 class MapLoader

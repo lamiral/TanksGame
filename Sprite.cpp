@@ -28,3 +28,8 @@ void Sprite::setTexture(const char *pathTexture)
 {
 	texture = TextureLoader::getTexture(pathTexture);
 }
+
+void Sprite::freeTexture()
+{
+	glDeleteTextures(1, &texture);
+}
