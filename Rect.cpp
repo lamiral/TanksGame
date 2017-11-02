@@ -16,7 +16,7 @@ Rect::Rect(float _w, float _h, float _x, float _y,RECT_DRAW_TYPE _type_draw,RECT
 
 Rect::~Rect()
 {
-	glDeleteVertexArrays(1, &VAO);
+	freeRes();
 }
 
 void Rect::init()
@@ -97,9 +97,19 @@ void Rect::init()
 	}
 }
 
+void Rect::freeRes()
+{
+	glDeleteVertexArrays(1, &VAO);
+}
+
 void Rect::draw()
 {	
-	if (rect_type == DYNAMIC) init();
+	if (rect_type == DYNAMIC)
+	{
+		freeRes();
+		init();
+	}
+
 	glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

@@ -42,8 +42,6 @@ void Collision::shell_collision(Player *player1,Player *player2,Map *map)
 
 	for (short i = 0; i < shell_size1; i++)
 	{	
-		if (player1->shells[i] == nullptr) continue;
-
 		float shellX = player1->shells[i]->x;
 		float shellY = player1->shells[i]->y;
 		float shellW = player1->shells[i]->w;
@@ -57,12 +55,12 @@ void Collision::shell_collision(Player *player1,Player *player2,Map *map)
 		float pH = player2->h;
 
 		if (((shellY <= (pY + pH) && (shellY + shellH) >= pY)) && ((shellX <= (pX + pW) && (shellX + shellW) >= pX)))
-		{
-			std::cout << "Boom!" << std::endl;
+		{	
+			player2->getLives()--;
 
 			delete player1->shells[i];
-			player1->shells[i] = nullptr;
-			continue;
+			player1->shells.erase(player1->shells.begin() + i);
+			break;
 		}
 
 		for (short j = 0; j < sections_size; j++)
@@ -74,20 +72,15 @@ void Collision::shell_collision(Player *player1,Player *player2,Map *map)
 
 			if (((shellY <= (sY + sH) && (shellY + shellH) >= sY)) && ((shellX <= (sX + sW) && (shellX + shellW) >= sX)))
 			{	
-				player2->getLives()--;
-
 				delete player1->shells[i];
-				player1->shells[i] = nullptr;
-
+				player1->shells.erase(player1->shells.begin() + i);
 				break;
 			}
 		}
 	}
 
 	for (short i = 0; i < shell_size2; i++)
-	{	
-		if (player2->shells[i] == nullptr) continue;
-
+	{
 		float shellX = player2->shells[i]->x;
 		float shellY = player2->shells[i]->y;
 		float shellW = player2->shells[i]->w;
@@ -100,11 +93,11 @@ void Collision::shell_collision(Player *player1,Player *player2,Map *map)
 		float pH = player1->h;
 
 		if (((shellY <= (pY + pH) && (shellY + shellH) >= pY)) && ((shellX <= (pX + pW) && (shellX + shellW) >= pX)))
-		{
+		{	
 			player1->getLives()--;
 
 			delete player2->shells[i];
-			player2->shells[i] = nullptr;
+			player2->shells.erase(player2->shells.begin() + i);
 			continue;
 		}
 
@@ -116,9 +109,9 @@ void Collision::shell_collision(Player *player1,Player *player2,Map *map)
 			float sH = map->sections[j]->h;
 
 			if (((shellY <= (sY + sH) && (shellY + shellH) >= sY)) && ((shellX <= (sX + sW) && (shellX + shellW) >= sX)))
-			{
+			{	
 				delete player2->shells[i];
-				player2->shells[i] = nullptr;
+				player2->shells.erase(player2->shells.begin() + i);
 				break;
 			}
 		}

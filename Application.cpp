@@ -29,16 +29,20 @@ Application::~Application()
 	delete map;
 	delete shader;
 	delete player1;
+	delete soundEngine;
 }
 
 void Application::start()
-{
+{	
+	soundEngine->play2D("resources/music/breakout.mp3",GL_TRUE);
+
 	if (window)	{
 		while (window->is_open())
-		{
+		{	
 			clear();
 			key();
 			collision();
+			checkGame();
 
 			shader->use();
 			shader->SetMatrix4fv("Ortho",Ortho);
@@ -46,6 +50,7 @@ void Application::start()
 			map->draw();
 			player1->draw();
 			player2->draw();
+			gui->draw();
 		}
 	}
 	else {
@@ -54,21 +59,27 @@ void Application::start()
 }
 
 void Application::restartGame()
-{
+{	
+	if (player1->getLives() > player2->getLives())			player1->getPoints()++;
+	else if(player2->getLives() > player1->getLives())		player2->getPoints()++;
+	else													player1->getLives() = player2->getLives()++;
 
+	if (player1->getPoints() >= 9) player1->getPoints() = 0;
+	if (player2->getPoints() >= 9) player2->getPoints() = 0;
+
+	player1->getLives() = 3;
+	player2->getLives() = 3;
+
+
+	MapLoader::setPlayersPosition(player1, player2, "resources/maps/map1.txt", SECTION_SIZE);
+
+	gui->restart();
 }
 
 void Application::checkGame()
 {
-	if (player1->getLives() <= 0)
-	{
-		restartGame();
-	}
-
-	if (player2->getLives() <= 0)
-	{
-		restartGame();
-	}
+	if      (player1->getLives() <= 0) restartGame(); 
+	else if (player2->getLives() <= 0) restartGame();
 }
 
 void Application::key()
@@ -101,16 +112,22 @@ void Application::initAppObjects()
 	shader = new Shader();
 	shader->loadShaders("VertexShader.txt", "FragmentShader.txt", LOAD_FROM_FILE);
 
+	player1 = new Player(100, 100, SECTION_SIZE +15, SECTION_SIZE +15,1);
+	player2 = new Player(200, 200, SECTION_SIZE +15, SECTION_SIZE +15,2);
+
 	map = new Map();
-	MapLoader::loadMap(map, "resources/maps/map1.txt", MAP_SIZE, MAP_SIZE);
-
-	player1 = new Player(100, 100, MAP_SIZE+15, MAP_SIZE+15,1);
-	player1->setTexture("resources/textures/p1down.png");
-
-	player2 = new Player(200, 200, MAP_SIZE+15, MAP_SIZE+15,2);
-	player2->setTexture("resources/textures/p2down.png");
+	MapLoader::loadMap(map, "resources/maps/map1.txt", MAP_SIZE, SECTION_SIZE);
+	MapLoader::setPlayersPosition(player1, player2, "resources/maps/map1.txt",SECTION_SIZE);
 
 	inputManager = new InputManager(window->getWindow());
+
+	gui = new GUI(player1, player2,SECTION_SIZE * SECTION_SIZE, SECTION_SIZE * SECTION_SIZE);
+	gui->setLivesSize(SECTION_SIZE, SECTION_SIZE);
+	gui->setPointsSize(SECTION_SIZE*2, SECTION_SIZE*2);
+
+	gui->initGUI();
+
+	soundEngine = createIrrKlangDevice();
 }
 
 void Application::initOrtho()

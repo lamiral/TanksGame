@@ -8,11 +8,12 @@ Section::Section(float _w, float _h, float _x, float _y, SECTION_TYPE _type)
 	this->y = _y;
 	this->type = _type;
 
-	sprite = new Sprite(w, h, x, y, DYNAMIC);
+	sprite = new Sprite(w, h, x, y, STATIC);
 }
 
 Section::~Section()
-{
+{	
+	sprite->freeRes();
 	delete sprite;
 }
 

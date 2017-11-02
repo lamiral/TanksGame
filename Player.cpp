@@ -1,5 +1,15 @@
 #include "Player.h"
 
+GLuint Player::p1UP =    0;
+GLuint Player::p1DOWN =	 0;
+GLuint Player::p1RIGHT = 0;
+GLuint Player::p1LEFT =  0;
+
+GLuint Player::p2UP =    0;
+GLuint Player::p2DOWN =  0;
+GLuint Player::p2RIGHT = 0;
+GLuint Player::p2LEFT =  0;
+
 Player::Player(float _x,float _y,float _w,float _h,int _playerNumber)
 {	
 	w = _w;
@@ -15,8 +25,26 @@ Player::Player(float _x,float _y,float _w,float _h,int _playerNumber)
 	playerNumber = _playerNumber;
 
 	direction = DOWN;
+	
+	if (playerNumber == 1)
+	{
+		p1UP =    TextureLoader::getTexture("resources/textures/p1up.png");
+		p1DOWN =  TextureLoader::getTexture("resources/textures/p1down.png");
+		p1RIGHT = TextureLoader::getTexture("resources/textures/p1right.png");
+		p1LEFT =  TextureLoader::getTexture("resources/textures/p1left.png");
+	}
+	else if(playerNumber == 2){
+		p2UP =    TextureLoader::getTexture("resources/textures/p2up.png");
+		p2DOWN =  TextureLoader::getTexture("resources/textures/p2down.png");
+		p2RIGHT = TextureLoader::getTexture("resources/textures/p2right.png");
+		p2LEFT =  TextureLoader::getTexture("resources/textures/p2left.png");
+	}
 
 	sprite = new Sprite(_w, _h, _x, _y, DYNAMIC);
+	sprite->setTextureMode(STATIC_TEXTURE);
+
+	if		(playerNumber == 1) sprite->setTexture(p1DOWN);
+	else if (playerNumber == 2) sprite->setTexture(p2DOWN);
 }
 
 Player::~Player()
@@ -34,6 +62,11 @@ void Player::setTexture(const char *pathTexture)
 	sprite->setTexture(pathTexture);
 }
 
+void Player::setTexture(GLuint texture)
+{
+	sprite->setTexture(texture);
+}
+
 void Player::draw()
 {	
 	sprite->x = this->x;
@@ -47,7 +80,7 @@ void Player::drawShells()
 {
 	for (short i = 0; i < shells.size(); i++)
 	{
-		if(shells[i] != nullptr) shells[i]->draw();
+		shells[i]->draw();
 	}
 }
 
@@ -60,9 +93,8 @@ void Player::move(KEY_TYPE key)
 		{
 			this->direction = UP;
 
-			sprite->freeTexture();
-			if		(playerNumber == 1) this->setTexture("resources/textures/p1up.png");
-			else if (playerNumber == 2) this->setTexture("resources/textures/p2up.png");
+			if      (playerNumber == 1)	this->setTexture(p1UP);
+			else if (playerNumber == 2)	this->setTexture(p2UP);
 		}
 	}
 	else if (key == KEY_S)
@@ -72,9 +104,8 @@ void Player::move(KEY_TYPE key)
 		{
 			this->direction = DOWN;
 
-			sprite->freeTexture();
-			if		(playerNumber == 1) this->setTexture("resources/textures/p1down.png");
-			else if (playerNumber == 2) this->setTexture("resources/textures/p2down.png");
+			if		(playerNumber == 1) this->setTexture(p1DOWN);
+			else if (playerNumber == 2) this->setTexture(p2DOWN);
 		}
 	}
 	else if (key == KEY_D)
@@ -84,9 +115,8 @@ void Player::move(KEY_TYPE key)
 		{
 			this->direction = RIGHT;
 
-			sprite->freeTexture();
-			if		(playerNumber == 1) this->setTexture("resources/textures/p1right.png");
-			else if (playerNumber == 2) this->setTexture("resources/textures/p2right.png");
+			if		(playerNumber == 1) this->setTexture(p1RIGHT);
+			else if (playerNumber == 2) this->setTexture(p2RIGHT);
 		}
 	}
 	else if (key == KEY_A)
@@ -96,9 +126,8 @@ void Player::move(KEY_TYPE key)
 		{
 			this->direction = LEFT;
 
-			sprite->freeTexture();
-			if		(playerNumber == 1) this->setTexture("resources/textures/p1left.png");
-			else if (playerNumber == 2) this->setTexture("resources/textures/p2left.png");
+			if		(playerNumber == 1) this->setTexture(p1LEFT);
+			else if (playerNumber == 2) this->setTexture(p2LEFT);
 		}
 	}
 }
@@ -122,7 +151,6 @@ void Player::instantiateShell(float currTime)
 	}
 	else if (direction == DOWN)
 	{
-
 		Shell *shell = new Shell(x + shell_size, y + w, shell_size, shell_size, SHELL_DOWN);
 		this->shells.push_back(shell);
 	}
@@ -136,4 +164,14 @@ void Player::instantiateShell(float currTime)
 		Shell *shell = new Shell(x, y + (w / 2), shell_size, shell_size, SHELL_LEFT);
 		this->shells.push_back(shell);
 	}
+}
+
+int& Player::getLives()
+{
+	return lives;
+}
+
+int& Player::getPoints()
+{
+	return points;
 }

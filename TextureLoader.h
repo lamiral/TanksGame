@@ -9,4 +9,5 @@ class TextureLoader
 public:
 
 	static GLuint getTexture(const char *filepath);
+	static void freeTexture(GLuint texture);
 };

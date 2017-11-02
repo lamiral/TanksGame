@@ -3,12 +3,19 @@
 #include "TextureLoader.h"
 #include "Rect.h"
 
+enum TEXTURE_MODE
+{
+	STATIC_TEXTURE, //ALL GAME
+	DYNAMIC_TEXTURE //FREE TEXTURE
+};
+
 class Sprite
 {
 private:
 
 	GLuint texture;
 	Rect *rect;
+	TEXTURE_MODE texture_mode;
 
 public:
 
@@ -20,5 +27,11 @@ public:
 	void draw();
 
 	void freeTexture();
+
 	void setTexture(const char *filepath);
+	void setTexture(GLuint _texture);
+	void setTextureMode(TEXTURE_MODE mode);
+	void freeRes();
+
+	GLuint getTexture();
 };

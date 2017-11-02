@@ -12,7 +12,14 @@ Sprite::Sprite(float _w,float _h,float _x,float _y,RECT_TYPE type)
 
 Sprite::~Sprite()
 {
+	rect->freeRes();
 	glDeleteTextures(1, &texture);
+}
+
+void Sprite::freeRes()
+{
+	this->freeTexture();
+	rect->freeRes();
 }
 
 void Sprite::draw()
@@ -25,11 +32,28 @@ void Sprite::draw()
 }
 
 void Sprite::setTexture(const char *pathTexture)
-{
+{	
+	this->freeTexture();
 	texture = TextureLoader::getTexture(pathTexture);
+}
+
+void Sprite::setTexture(GLuint _texture)
+{	
+	this->freeTexture();
+	texture = _texture;
 }
 
 void Sprite::freeTexture()
 {
-	glDeleteTextures(1, &texture);
+	if(texture_mode != STATIC_TEXTURE) glDeleteTextures(1, &texture);
+}
+
+void Sprite::setTextureMode(TEXTURE_MODE mode)
+{
+	texture_mode = mode;
+}
+
+GLuint Sprite::getTexture()
+{
+	return texture;
 }

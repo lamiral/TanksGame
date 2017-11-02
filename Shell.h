@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Sprite.h"
+#include "TextureLoader.h"
 
 #define SHELL_SPEED 10
 
@@ -16,13 +17,13 @@ class Shell
 {
 private:
 	
+	static GLuint shell_texture;
 	Sprite *sprite;
-
-	SHELL_DIRECTION direction;
-
 	void move();
 
 public:
+
+	SHELL_DIRECTION direction;
 
 	float x, y, w, h;
 

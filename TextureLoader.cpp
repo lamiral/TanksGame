@@ -31,3 +31,8 @@ GLuint TextureLoader::getTexture(const char *pathTexture)
 
 	return texture;
 }
+
+void TextureLoader::freeTexture(GLuint texture)
+{
+	glDeleteTextures(1, &texture);
+}

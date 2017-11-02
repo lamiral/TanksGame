@@ -1,9 +1,11 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 #include "Sprite.h"
 #include "InputManager.h"
 #include "Shell.h"
+#include "TextureLoader.h"
 
 enum DIRECTION
 {
@@ -19,6 +21,16 @@ class Player
 {
 private:
 	
+	static GLuint p1UP;
+	static GLuint p1DOWN;
+	static GLuint p1RIGHT;
+	static GLuint p1LEFT;
+
+	static GLuint p2UP;
+	static GLuint p2DOWN;
+	static GLuint p2RIGHT;
+	static GLuint p2LEFT;
+
 	Sprite *sprite;
 
 	float lastTime;
@@ -26,7 +38,7 @@ private:
 	int lives;
 	int points;
 	int playerNumber;
-
+	
 public:
 	
 	std::vector<Shell*> shells;
@@ -38,6 +50,8 @@ public:
 	~Player();
 
 	void setTexture(const char *pathTexture);
+	void setTexture(GLuint texture);
+
 	void draw();
 
 	void drawShells();
